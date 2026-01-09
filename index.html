@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Happy Birthday Samikshya</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body{
+      margin:0;
+      font-family:Arial;
+      background:linear-gradient(135deg,#ff6ec4,#7873f5);
+      color:white;
+      text-align:center;
+      overflow:hidden;
+    }
+    h1{font-size:42px;margin-top:30px}
+    h2{font-size:24px}
+    p{font-size:18px}
+    #countdown{
+      font-size:26px;
+      margin:20px;
+      font-weight:bold;
+    }
+    .photos{
+      display:flex;
+      justify-content:center;
+      gap:15px;
+      margin:30px;
+      flex-wrap:wrap;
+    }
+    .photos img{
+      width:180px;
+      height:240px;
+      object-fit:cover;
+      border-radius:20px;
+      box-shadow:0 10px 20px rgba(0,0,0,0.3);
+    }
+    button{
+      padding:12px 24px;
+      font-size:18px;
+      border:none;
+      border-radius:30px;
+      cursor:pointer;
+      margin-top:20px;
+    }
+    canvas{
+      position:fixed;
+      top:0;
+      left:0;
+      pointer-events:none;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="confetti"></canvas>
+
+<h1>🎉 Happy 18th Birthday Samikshya! 🎂</h1>
+<h2>Adulting unlocked 😎</h2>
+<p>More freedom. More fun. More memories.</p>
+
+<div id="countdown">Loading countdown...</div>
+
+<div class="photos">
+  <img src="photo1.jpg">
+  <img src="photo2.jpg">
+  <img src="photo3.jpg">
+</div>
+
+<button id="playBtn">🎶 Tap for surprise</button>
+<p id="secret" style="display:none;margin-top:20px">
+You’re officially unstoppable now. Go rule your world 🚀✨
+</p>
+
+<audio id="music" src="https://cdn.pixabay.com/audio/2022/03/15/audio_5c6c8c9d52.mp3"></audio>
+
+<script>
+/* 🎂 SET BIRTHDAY DATE HERE */
+const birthday = new Date(2026, 0, 10);
+
+function updateCountdown(){
+  const now = new Date();
+  const diff = birthday - now;
+  const cd = document.getElementById("countdown");
+
+  if(diff <= 0){
+    cd.innerHTML = "🎉 IT’S HER BIRTHDAY TODAY! 🎉";
+    return;
+  }
+
+  const d = Math.floor(diff / (1000*60*60*24));
+  const h = Math.floor((diff / (1000*60*60)) % 24);
+  const m = Math.floor((diff / (1000*60)) % 60);
+  const s = Math.floor((diff / 1000) % 60);
+
+  cd.innerHTML = `⏳ ${d}d ${h}h ${m}m ${s}s left`;
+}
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+/* 🎊 CONFETTI */
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+
+let confetti = Array.from({length:150}, () => ({
+  x: Math.random()*canvas.width,
+  y: Math.random()*canvas.height,
+  r: Math.random()*6+4,
+  d: Math.random()*5+1,
+  c: `hsl(${Math.random()*360},100%,70%)`
+}));
+
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  confetti.forEach(p=>{
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=p.c;
+    ctx.fill();
+    p.y+=p.d;
+    if(p.y>canvas.height) p.y=0;
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+
+window.onresize = () => {
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+};
+
+/* 🎶 MUSIC + SECRET (FIXED) */
+const music = document.getElementById("music");
+const secret = document.getElementById("secret");
+const btn = document.getElementById("playBtn");
+
+btn.addEventListener("click", () => {
+  music.play().then(() => {
+    secret.style.display = "block";
+  }).catch(() => {
+    alert("Click once anywhere on the page, then press the button again.");
+  });
+});
+</script>
